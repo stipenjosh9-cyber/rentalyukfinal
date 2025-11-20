@@ -1,3 +1,6 @@
+// === 1. KONFIGURASI DAN INISIALISASI ===
+
+// Kunci untuk localStorage
 const STORAGE_KEYS = {
     INVENTORY: 'rentalyuk_inventory',
     RENTALS: 'rentalyuk_rentals',
@@ -12,6 +15,7 @@ const DEFAULT_PRICING_MAP = {
     "1260": 0, "1320": 0, "1380": 0, "1440": 0
 };
 
+// === 2. DATA STATE LOKAL (CACHE) ===
 let localInventory = [];
 let localRentals = [];
 let localHistory = [];
@@ -20,16 +24,18 @@ let localProfile = {};
 let confirmCallback = null; 
 let countdownTimerInterval = null;
 let selectedSettingsPicDataUrl = null; 
-let selectedSetupPicDataUrl = null;     
+let selectedSetupPicDataUrl = null;    
 
 let statsChart = null;
 const statsChartCanvas = document.getElementById('stats-pie-chart');
 const statsNoData = document.getElementById('stats-no-data');
-
+// (BARU) Selektor untuk UI Statistik baru
 const statsSummaryContainer = document.getElementById('stats-summary-container');
 const statsLegendSummary = document.getElementById('stats-legend-summary');
 const statsChartCenterText = document.getElementById('stats-chart-center-text');
 
+
+// === 4. SELEKTOR DOM ===
 const navLinks = document.querySelectorAll('.nav-link');
 const pages = {
     dashboard: document.getElementById('page-dashboard'),
@@ -40,12 +46,14 @@ const pages = {
 };
 const mainContent = document.getElementById('main-content');
 
+// Selektor Setup
 const setupModal = document.getElementById('setup-modal');
 const setupForm = document.getElementById('setup-form');
 const setupRentalName = document.getElementById('setup-rental-name');
 const setupProfileUpload = document.getElementById('setup-profile-upload');
 const setupProfilePreview = document.getElementById('setup-profile-preview');
 
+// Selektor Profil & Pengaturan
 const sidebarProfilePic = document.getElementById('sidebar-profile-pic');
 const dashboardGreeting = document.getElementById('dashboard-greeting');
 const rentalNameForm = document.getElementById('rental-name-form');
@@ -55,6 +63,7 @@ const profilePicUpload = document.getElementById('profile-pic-upload');
 const saveProfileBtn = document.getElementById('save-profile-btn');
 const deleteAllDataBtn = document.getElementById('delete-all-data-btn');
 
+// Selektor Modal Harga Item
 const pricingModal = document.getElementById('pricing-modal');
 const pricingForm = document.getElementById('pricing-form');
 const pricingItemId = document.getElementById('pricing-item-id');
@@ -62,12 +71,14 @@ const pricingItemName = document.getElementById('pricing-item-name');
 const pricingCancelBtn = document.getElementById('pricing-cancel-btn');
 const pricingGridContainer = document.getElementById('pricing-grid-container'); 
 
+// Selektor Form Harga Kustom
 const customPriceForm = document.getElementById('custom-price-form');
 const customHoursInput = document.getElementById('custom-hours');
 const customMinutesInput = document.getElementById('custom-minutes');
 const customPriceInput = document.getElementById('custom-price');
 const pricingItemIdCustom = document.getElementById('pricing-item-id-custom');
 
+// Selektor Inventaris
 const inventoryTableBody = document.getElementById('inventory-table-body');
 const inventoryModal = document.getElementById('inventory-modal');
 const addInventoryBtn = document.getElementById('add-inventory-btn');
@@ -75,6 +86,7 @@ const inventoryForm = document.getElementById('inventory-form');
 const inventoryCancelBtn = document.getElementById('inventory-cancel-btn');
 const seedDataBtn = document.getElementById('seed-data-btn');
 
+// Selektor Stok
 const stockModal = document.getElementById('stock-modal');
 const stockForm = document.getElementById('stock-form');
 const stockItemId = document.getElementById('stock-item-id');
@@ -84,6 +96,7 @@ const stockCancelBtn = document.getElementById('stock-cancel-btn');
 const stockReduceBtn = document.getElementById('stock-reduce-btn');
 const stockAddBtn = document.getElementById('stock-add-btn');
 
+// Selektor Sewa & Laporan
 const rentalsTableBody = document.getElementById('rentals-table-body');
 const historyTableBody = document.getElementById('history-table-body');
 const laporanTableBody = document.getElementById('laporan-table-body');
@@ -93,6 +106,7 @@ const cancelBtn = document.getElementById('cancelBtn');
 const rentalForm = document.getElementById('rental-form');
 const rentalPriceDisplay = document.getElementById('rental-price-display'); 
 
+// Selektor Dropdown Kustom
 const itemSelectInput = document.getElementById('item-select');
 const itemSelectTrigger = document.getElementById('item-select-trigger');
 const itemSelectText = document.getElementById('item-select-text');
@@ -104,15 +118,19 @@ const durationSelectTrigger = document.getElementById('rental-duration-trigger')
 const durationSelectText = document.getElementById('rental-duration-text');
 const durationSelectOptions = document.getElementById('rental-duration-options');
 
+// Selektor Statistik Dashboard
 const statTotalRevenue = document.getElementById('stat-total-revenue'); 
 const statTotal = document.getElementById('stat-total-items');
 const statOnRent = document.getElementById('stat-on-rent');
 const statAvailable = document.getElementById('stat-available');
 
+// Selektor Modal Pesan
 const messageModal = document.getElementById('message-modal');
 const messageText = document.getElementById('message-text');
 const messageOkBtn = document.getElementById('message-ok-btn');
 const messageCancelBtn = document.getElementById('message-cancel-btn');
+
+// === FUNGSI HELPER LOCALSTORAGE ===
 
 function loadFromStorage(key, defaultValue = []) {
     try {
@@ -132,6 +150,8 @@ function saveToStorage(key, data) {
         showMessage("Error: Gagal menyimpan data. Penyimpanan mungkin penuh.");
     }
 }
+
+// === 5. FUNGSI-FUNGSI RENDER (UI) ===
 
 function showMessage(message) {
     console.log("Menampilkan Pesan:", message);
@@ -370,9 +390,9 @@ function populateDurationDropdown(itemId) {
     }
     
     if (availablePackages.length === 0) {
-            durationSelectOptions.innerHTML = '<li class="dropdown-option text-gray-400 cursor-not-allowed">Harga belum diatur</li>';
-            durationSelectTrigger.disabled = true;
-            return;
+         durationSelectOptions.innerHTML = '<li class="dropdown-option text-gray-400 cursor-not-allowed">Harga belum diatur</li>';
+         durationSelectTrigger.disabled = true;
+         return;
     }
     
     durationSelectTrigger.disabled = false;
@@ -393,6 +413,8 @@ function updateRentalPriceDisplay() {
     const price = parseInt(durationPriceInput.value) || 0; 
     rentalPriceDisplay.textContent = `Harga: Rp ${price.toLocaleString('id-ID')}`;
 }
+
+// === 6. FUNGSI-FUNGSI LOGIKA (Interaksi & localStorage) ===
 
 function formatDuration(totalMinutes) {
     if (isNaN(totalMinutes) || totalMinutes < 0) return "Durasi Invalid";
@@ -502,8 +524,8 @@ function handleAddRental(e) {
         return;
     }
     if (isNaN(newPrice) || newPrice <= 0) {
-            showMessage("Error: Harga tidak valid. Pastikan harga paket > Rp 0.");
-            return;
+         showMessage("Error: Harga tidak valid. Pastikan harga paket > Rp 0.");
+         return;
     }
 
     const itemInInventory = localInventory.find(item => item.id === newItemId);
@@ -554,8 +576,8 @@ function handleReturnRental(e) {
 
         const rentalToMoveIndex = localRentals.findIndex(rental => rental.id === rentalIdToReturn);
         if (rentalToMoveIndex === -1) {
-                showMessage("Error: Data sewa tidak ditemukan.");
-                return;
+              showMessage("Error: Data sewa tidak ditemukan.");
+              return;
         }
         
         const rentalToMove = localRentals[rentalToMoveIndex];
@@ -756,18 +778,20 @@ function handleAddCustomPricePackage(e) {
     openPricingModal(id);
 }
 
+// (BARU) Menghapus paket harga kustom
 function handleDeleteCustomPrice(e) {
     if (!e.target.classList.contains('delete-custom-price-btn')) return;
     
-    const id = pricingItemId.value; 
+    const id = pricingItemId.value; // Dapatkan ID item dari form utama
     const item = localInventory.find(i => i.id === id);
     if (!item) return;
 
     const minutesToDelete = e.target.dataset.minutesToDelete;
     if (item.pricing && item.pricing[minutesToDelete] !== undefined) {
-        delete item.pricing[minutesToDelete]; 
+        delete item.pricing[minutesToDelete]; // Hapus dari map
         saveToStorage(STORAGE_KEYS.INVENTORY, localInventory);
         
+        // Hapus elemen dari DOM
         e.target.closest('.custom-price-package').remove();
         showMessage("Paket kustom berhasil dihapus.");
     }
@@ -852,7 +876,7 @@ function handleImageFile(file, imgElement, onLoaded) {
         return;
     }
 
-    const maxSize = 2 * 1024 * 1024; 
+    const maxSize = 2 * 1024 * 1024; // 2MB
     if (file.size > maxSize) {
         showMessage("Error: Ukuran file terlalu besar. Maksimal 2MB.");
         return;
@@ -1148,6 +1172,7 @@ function initializeMainApp() {
     if (countdownTimerInterval) clearInterval(countdownTimerInterval);
     countdownTimerInterval = setInterval(updateAllCountdowns, 1000);
 
+    // Listener Navigasi & Modal
     addRentalBtn.addEventListener('click', () => {
         populateItemSelect(); 
         populateDurationDropdown(null); 
@@ -1173,25 +1198,30 @@ function initializeMainApp() {
         closeModal(messageModal);
     });
     
+    // Listener Modal Harga
     pricingCancelBtn.addEventListener('click', () => closeModal(pricingModal));
     pricingModal.addEventListener('click', (e) => { if (e.target === pricingModal) closeModal(pricingModal); });
     pricingForm.addEventListener('submit', handleSaveItemPricing); 
     customPriceForm.addEventListener('submit', handleAddCustomPricePackage);
     pricingGridContainer.addEventListener('click', handleDeleteCustomPrice); 
 
+    // Listener Tombol Stok
     stockAddBtn.addEventListener('click', () => handleUpdateStock('add'));
     stockReduceBtn.addEventListener('click', () => handleUpdateStock('reduce'));
     
+    // Listener Navigasi Halaman
     document.getElementById('nav-dashboard').addEventListener('click', (e) => { e.preventDefault(); navigateTo('dashboard'); });
     document.getElementById('nav-inventory').addEventListener('click', (e) => { e.preventDefault(); navigateTo('inventory'); });
     document.getElementById('nav-laporan').addEventListener('click', (e) => { e.preventDefault(); navigateTo('laporan'); });
     document.getElementById('nav-settings').addEventListener('click', (e) => { e.preventDefault(); navigateTo('settings'); });
     document.getElementById('nav-stats').addEventListener('click', (e) => { e.preventDefault(); navigateTo('stats'); });
     
+    // Listener Form Submit
     rentalForm.addEventListener('submit', handleAddRental);
     inventoryForm.addEventListener('submit', handleAddInventory);
     rentalNameForm.addEventListener('submit', handleRentalNameSave);
     
+    // Listener Lain-lain
     seedDataBtn.addEventListener('click', seedDatabase);
     profilePicUpload.addEventListener('change', handleSettingsPicPreview);
     saveProfileBtn.addEventListener('click', handleProfilePicUpload);
@@ -1199,6 +1229,7 @@ function initializeMainApp() {
     rentalsTableBody.addEventListener('click', handleReturnRental);
     inventoryTableBody.addEventListener('click', handleManageInventoryClick);
 
+    // Listener untuk Dropdown Kustom
     function setupDropdown(triggerEl, optionsEl, inputEl, textEl, onSelectCallback = null) {
         triggerEl.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1256,6 +1287,8 @@ function initializeMainApp() {
     navigateTo('dashboard');
 }
 
+// === 7. INISIALISASI APLIKASI ===
+
 function main() {
     localInventory = loadFromStorage(STORAGE_KEYS.INVENTORY, []);
     localRentals = loadFromStorage(STORAGE_KEYS.RENTALS, []);
@@ -1273,4 +1306,5 @@ function main() {
     }
 }
 
+// Jalankan aplikasi
 main();

@@ -1,3 +1,4 @@
+/* Global Styles */
 body {
     font-family: 'Inter', sans-serif;
     background-color: #111827; /* bg-gray-900 */
@@ -25,33 +26,57 @@ body {
 }
 
 /* Style untuk Dropdown Kustom */
+/* Note: @apply diganti dengan CSS standar agar kompatibel tanpa build tool */
 .dropdown-panel {
-    @apply absolute z-10 w-full mt-1 bg-gray-700 rounded-lg shadow-xl 
-           overflow-hidden transition-all duration-200 ease-out;
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    margin-top: 0.25rem;
+    background-color: #374151; /* bg-gray-700 */
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    transition: all 0.2s ease-out;
     max-height: 0px;
     opacity: 0;
     transform-origin: top;
     transform: scale(0.95);
 }
+
 .dropdown-panel.open {
     max-height: 200px; /* Cukup untuk 5-6 item */
     opacity: 1;
     transform: scale(1);
-    @apply overflow-y-auto; /* Munculkan scrollbar jika penuh */
+    overflow-y: auto; /* Munculkan scrollbar jika penuh */
 }
+
 .dropdown-option {
-    @apply px-4 py-2 cursor-pointer text-gray-200 hover:bg-blue-600 hover:text-white;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: #e5e7eb; /* text-gray-200 */
 }
+
+.dropdown-option:hover {
+    background-color: #2563EB; /* hover:bg-blue-600 */
+    color: white;
+}
+
 .dropdown-option.selected {
-    @apply bg-blue-700 text-white;
+    background-color: #1d4ed8; /* bg-blue-700 */
+    color: white;
 }
+
 /* Animasi putar untuk panah */
 .dropdown-arrow {
-    @apply transition-transform duration-200 ease-out;
+    transition-property: transform;
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
 }
+
 .dropdown-trigger.open .dropdown-arrow {
     transform: rotate(180deg);
 }
+
 
 /* Sembunyikan panah atas/bawah di input number */
 input[type=number]::-webkit-inner-spin-button,
@@ -81,12 +106,12 @@ input[type=number] {
     animation: modalFadeOut 300ms ease-in forwards;
 }
 
-/* Animasi untuk daftar statistik */
+/* (BARU) Animasi untuk daftar statistik */
 @keyframes statsItemFadeIn {
     from { opacity: 0; transform: translateX(-15px); }
     to { opacity: 1; transform: translateX(0); }
 }
 .stats-item-anim {
     animation: statsItemFadeIn 500ms ease-out forwards;
-    opacity: 0; 
+    opacity: 0; /* Mulai transparan */
 }

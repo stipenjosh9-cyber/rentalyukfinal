@@ -5,19 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Manajemen Sewa (LocalBase)</title>
     
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="text-gray-100">
 
     <div id="main-content" class="flex h-screen">
 
+        <!-- BAGIAN SIDEBAR NAVIGASI KIRI -->
         <aside class="w-64 flex-shrink-0 bg-gray-800 p-6 hidden md:flex flex-col overflow-y-auto">
             <h1 class="text-3xl font-extrabold text-blue-500 mb-6 mt-2 text-center" style="font-family: 'Poppins', sans-serif;">RentalYuk</h1>
             
@@ -50,15 +54,20 @@
             </nav>
         </aside>
 
+        <!-- Wrapper untuk konten utama yang bisa di-scroll -->
         <div class="flex-1 flex flex-col overflow-hidden">
             
+            <!-- KONTEN UTAMA -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-8">
                 
+                <!-- Wrapper Halaman Dashboard -->
                 <div id="page-dashboard">
                     <h2 class="text-3xl font-semibold text-white">Dashboard</h2>
                     <p id="dashboard-greeting" class="text-xl text-gray-400 -mt-1 mb-6" style="font-family: 'Poppins', sans-serif; font-weight: 400;">Memuat data rental...</p>
 
+                    <!-- KARTU STATISTISTIK -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <!-- Kartu Pendapatan -->
                         <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
                             <div class="p-3 rounded-full bg-purple-600 bg-opacity-30 text-purple-400 mr-4">
                                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2zM0 14s3 4 12 4 12-4 12-4M3 10h18" /></svg>
@@ -148,24 +157,31 @@
                     </footer>
                 </div>
 
+                <!-- (DIUBAH) Halaman Statistik -->
                 <div id="page-stats" class="hidden">
                     <h2 class="text-3xl font-semibold text-white">Statistik Penggunaan</h2>
                     <p class="text-xl text-gray-400 -mt-1 mb-6" style="font-family: 'Poppins', sans-serif; font-weight: 400;">Total jam penggunaan berdasarkan item.</p>
                     
                     <div class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg">
+                        <!-- (DIUBAH) Layout Flexbox -->
                         <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
                             
+                            <!-- Kolom Kiri: Chart -->
                             <div class="w-full md:w-1/2 max-w-sm mx-auto relative">
                                 <canvas id="stats-pie-chart"></canvas>
+                                <!-- (BARU) Label Total di Tengah -->
                                 <div id="stats-chart-center-text" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                                     <span class="text-3xl font-bold text-white">0</span>
                                     <span class="text-sm text-gray-400">Total Jam</span>
                                 </div>
                             </div>
                             
+                            <!-- Kolom Kanan: Ringkasan / Legenda Kustom -->
                             <div id="stats-summary-container" class="w-full md:w-1/2">
                                 <h3 class="text-lg font-semibold text-white mb-4 pb-2 border-b border-gray-700">Ringkasan Item</h3>
-                                <div id="stats-legend-summary" class="space-y-3 max-h-64 overflow-y-auto pr-2"></div>
+                                <div id="stats-legend-summary" class="space-y-3 max-h-64 overflow-y-auto pr-2">
+                                    <!-- Daftar ringkasan diisi oleh JavaScript -->
+                                </div>
                             </div>
 
                         </div>
@@ -293,6 +309,8 @@
         </div>
     </div>
 
+
+    <!-- MODAL UNTUK SETUP AWAL -->
     <div id="setup-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-50">
         <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-lg">
             <h4 class="text-3xl font-semibold mb-2 text-white text-center" style="font-family: 'Poppins', sans-serif;">Selamat Datang di RentalYuk!</h4>
@@ -338,11 +356,14 @@
         </div>
     </div>
 
+
+    <!-- MODAL UNTUK TAMBAH SEWA -->
     <div id="rental-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-40">
         <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md">
             <h4 class="text-2xl font-semibold mb-6 text-white">Formulir Sewa Baru</h4>
             <form id="rental-form">
                 <div class="space-y-4">
+                    <!-- Blok Dropdown Kustom Item -->
                     <div>
                         <label for="item-select-trigger" class="block text-sm font-medium text-gray-300 mb-1">Pilih Barang (Hanya yang tersedia)</label>
                         <div class="relative custom-select-wrapper">
@@ -354,7 +375,9 @@
                                 <span id="item-select-text" class="text-gray-400">Pilih barang...</span>
                                 <svg class="dropdown-arrow w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <ul id="item-select-options" class="dropdown-panel"></ul>
+                            <ul id="item-select-options" class="dropdown-panel">
+                                <!-- Opsi diisi oleh JavaScript -->
+                            </ul>
                         </div>
                     </div>
                     
@@ -363,6 +386,7 @@
                         <input type="text" id="renter-name" name="renterName" required placeholder="Contoh: Budi" class="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500">
                     </div>
                     
+                    <!-- Blok Dropdown Kustom Durasi (Sekarang Dinamis) -->
                     <div>
                         <label for="rental-duration-trigger" class="block text-sm font-medium text-gray-300 mb-1">Durasi Sewa</label>
                         <div class="relative custom-select-wrapper">
@@ -376,10 +400,13 @@
                                 <span id="rental-duration-text" class="text-gray-400">Pilih barang dulu...</span>
                                 <svg class="dropdown-arrow w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <ul id="rental-duration-options" class="dropdown-panel"></ul>
+                            <ul id="rental-duration-options" class="dropdown-panel">
+                                <!-- Opsi diisi oleh JavaScript berdasarkan barang -->
+                            </ul>
                         </div>
                     </div>
 
+                    <!-- Tampilan Harga -->
                     <div>
                         <p class="text-lg text-green-400 font-bold mt-2 text-center" id="rental-price-display">Harga: Rp 0</p>
                     </div>
@@ -393,6 +420,7 @@
         </div>
     </div>
     
+    <!-- MODAL UNTUK TAMBAH INVENTARIS -->
     <div id="inventory-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-40">
         <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md">
             <h4 class="text-2xl font-semibold mb-6 text-white">Formulir Item Inventaris</h4>
@@ -423,11 +451,13 @@
         </div>
     </div>
 
+    <!-- MODAL UNTUK PENGATURAN HARGA ITEM (Hibrida) -->
     <div id="pricing-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-40">
         <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-2xl">
             <h4 class="text-2xl font-semibold mb-2 text-white">Atur Paket Harga</h4>
             <p class="text-lg text-blue-400 mb-6" id="pricing-item-name">Nama Item</p>
             
+            <!-- Form untuk paket kustom -->
             <form id="custom-price-form" class="mb-6 pb-6 border-b border-gray-700 flex flex-wrap items-end gap-4">
                 <input type="hidden" id="pricing-item-id-custom">
                 <div>
@@ -454,12 +484,14 @@
                 </button>
             </form>
 
+            <!-- Form untuk daftar harga default -->
             <form id="pricing-form">
                 <input type="hidden" id="pricing-item-id">
                 
                 <p class="text-sm text-gray-400 mb-4">Isi harga untuk paket durasi yang ingin Anda tawarkan untuk item ini. Paket dengan harga "0" tidak akan tampil di formulir sewa.</p>
                 
                 <div id="pricing-grid-container" class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 max-h-64 overflow-y-auto pr-2">
+                    <!-- Daftar Harga Default (diisi oleh JS nanti) -->
                     <div class="relative price-input-group">
                         <label class="block text-sm font-medium text-gray-300 mb-2">30 Menit</label>
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
@@ -468,30 +500,11 @@
                         <input type="number" data-minutes="30" placeholder="0" min="0"
                                class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    <div class="relative price-input-group">
-                        <label class="block text-sm font-medium text-gray-300 mb-2">1 Jam</label>
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
-                            <span class="text-gray-400">Rp</span>
-                        </div>
-                        <input type="number" data-minutes="60" placeholder="0" min="0"
-                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="relative price-input-group">
-                        <label class="block text-sm font-medium text-gray-300 mb-2">2 Jam</label>
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
-                            <span class="text-gray-400">Rp</span>
-                        </div>
-                        <input type="number" data-minutes="120" placeholder="0" min="0"
-                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="relative price-input-group">
-                        <label class="block text-sm font-medium text-gray-300 mb-2">3 Jam</label>
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
-                            <span class="text-gray-400">Rp</span>
-                        </div>
-                        <input type="number" data-minutes="180" placeholder="0" min="0"
-                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
+                    <!-- (Dipersingkat untuk kejelasan: Element input harga lainnya akan digenerate atau ada di sini seperti kode asli) -->
+                     <div class="relative price-input-group"><label class="block text-sm font-medium text-gray-300 mb-2">1 Jam</label><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8"><span class="text-gray-400">Rp</span></div><input type="number" data-minutes="60" placeholder="0" min="0" class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                     <div class="relative price-input-group"><label class="block text-sm font-medium text-gray-300 mb-2">2 Jam</label><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8"><span class="text-gray-400">Rp</span></div><input type="number" data-minutes="120" placeholder="0" min="0" class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                     <div class="relative price-input-group"><label class="block text-sm font-medium text-gray-300 mb-2">3 Jam</label><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8"><span class="text-gray-400">Rp</span></div><input type="number" data-minutes="180" placeholder="0" min="0" class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                     <!-- Dan seterusnya... -->
                 </div>
                 
                  <div class="flex justify-end gap-4 mt-8">
@@ -504,6 +517,7 @@
         </div>
     </div>
 
+    <!-- MODAL UNTUK EDIT STOK -->
     <div id="stock-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-40">
         <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md">
             <h4 class="text-2xl font-semibold mb-2 text-white">Edit Stok</h4>
@@ -524,6 +538,7 @@
         </div>
     </div>
 
+    <!-- MODAL KUSTOM UNTUK PESAN/ERROR/KONFIRMASI -->
     <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-50">
         <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-sm text-center">
             <p id="message-text" class="text-lg text-white mb-6">Pesan default</p>
@@ -538,7 +553,8 @@
         </div>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <!-- Custom JS Logic -->
+    <script src="script.js" type="module"></script>
 
 </body>
 </html>
